@@ -1,0 +1,103 @@
+﻿<Page
+    x:Class="EventApp.Pages.MyEvent"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:EventApp.Pages"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="using:EventApp.UserControls"
+    xmlns:data="using:EventApp.Model"
+    xmlns:presentation="using:EventApp.Presentation"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+
+        <!--#region DataTemplate-->
+        <!-- When using x:Bind, you need to set x:DataType -->
+        <DataTemplate x:Name="PictureGridViewTemplate" x:DataType="presentation:PictureViewModel">
+            <StackPanel Orientation="Vertical">
+                <!--<Ellipse x:Name="Ellipse" 
+                             Width ="140"
+                             Height="140"
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Center"
+                             Margin="4,4,4,4">
+                    <Ellipse.Fill>
+                        <ImageBrush ImageSource="{x:Bind ThumbUrl}"></ImageBrush>
+                    </Ellipse.Fill>
+                </Ellipse>-->
+                <Image Source="{Binding SlideUrl}" />
+            </StackPanel>
+        </DataTemplate>
+        <!--#endregion-->
+    </Page.Resources>
+
+    <Grid Padding="{x:Bind Frame.Padding, Mode=OneWay}" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="{Binding Name}" VerticalAlignment="Center" Style="{ThemeResource TitleTextBlockStyle}"/>
+
+        <TextBlock Grid.Row="1">
+                <Run Text="du" />
+                <Run Text="{Binding StartDate}" />
+                <Run Text="au" />
+                <Run Text="{Binding EndDate}" />
+                <Run Text="," />
+                <Run Text="{Binding PictureNb}" />
+                <Run Text="photos." />
+        </TextBlock>
+
+        <TextBlock Grid.Row="2">
+                <Run Text="{Binding Desrciption}" />
+        </TextBlock>
+
+        <!--<ScrollViewer Grid.Row="3" ZoomMode="Enabled">
+                <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
+                </StackPanel>
+            </ScrollViewer>-->
+        <!--<ListView ItemsSource="{Binding Pictures}" Grid.Row="3" ItemTemplate="{StaticResource PictureGridViewTemplate}">
+                <ListView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapGrid Orientation="Horizontal" ItemHeight="100" ItemWidth="100" CanHorizontallyScroll="True" CanVerticallyScroll="True" />
+                    </ItemsPanelTemplate>
+                </ListView.ItemsPanel>
+            </ListView>-->
+
+        <ListView x:Name="PicturesListView" 
+                  Grid.Row="3" 
+                  ItemsSource="{Binding Pictures}" 
+                  IsItemClickEnabled="True"
+                  ContainerContentChanging="PicturesListView_ContainerContentChanging"
+                  ItemClick="PicturesListView_ItemClick">
+            <ListView.ItemTemplate>
+                <DataTemplate x:DataType="data:Picture">
+                    <RelativePanel>
+                        <TextBlock x:Name="IdLabel"
+                                   Margin="0,12,5,12" 
+                                   Style="{ThemeResource BaseTextBlockStyle}"
+                                   Text="Nom :"/>
+                        <TextBlock RelativePanel.RightOf="IdLabel"
+                                   Style="{ThemeResource BaseTextBlockStyle}"
+                                   Margin="0,12,0,12" 
+                                   Text="{Binding FileName}"/>
+                        <Image RelativePanel.Below="IdLabel"
+                               Source="{Binding SlideUrl}" 
+                               MaxWidth="500"
+                               Stretch="Uniform"
+                               Margin="0,0,0,24" />
+                    </RelativePanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+
+        <Border x:Name="Waiter" Grid.RowSpan="4" Visibility="Collapsed" Background="#FFC61818">
+            <ProgressRing Width="64" Height="64" IsActive="True" />
+        </Border>
+    </Grid>
+
+</Page>
